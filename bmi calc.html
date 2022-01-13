@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BmiCalc</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel&family=Dosis:wght@300&family=Monda&family=Montserrat&family=Montserrat+Alternates:ital,wght@1,300&family=Orbitron&family=Poppins:wght@200;700&family=Quicksand:wght@300&family=Rajdhani:wght@300&family=Special+Elite&family=Teko&display=swap');
+        body{
+            background-color: rgb(134, 132, 255);
+            font-family: Orbitron ;
+            font-size: .9em;
+            margin: 1rem;
+            width: 100%;
+            height: 100vh;
+            display: flex; 
+        }
+        h2{ 
+            display: flex;
+            margin-top: -1.4em;
+            margin-left: 5.5em;
+            text-align: justify;
+
+        }
+        
+        
+        .ul-radio{
+            margin-top: 4em;
+            display: flex;
+            list-style: none;
+           
+
+        }
+        .left-side{
+            display: space-between;
+
+        }
+        .right-side{
+            width: 90%;
+            margin-left: 1em;
+            margin-top: 3em;
+        }
+        .xyscale-el{
+            margin-top: 6rem;
+            margin-left: 9rem;
+        }
+        .radio{
+            padding: 0;
+            display: block;
+            margin-left:2em;
+            margin-top:5em;
+        }
+        
+        .container-el{
+            padding: 0;
+            margin-left: 2em;
+            margin-top: 0em;
+            
+            
+        }
+        .label{
+            margin-bottom: 1em;
+        }
+
+        button{
+            margin-left: 4.5em;
+            background-color: rgb(74, 106, 250);
+            border: none ;
+            border-radius: 19px;
+            height: 1.8em;
+            width: 6em;
+            font-size: 1.2em;
+            font-family: Orbitron;
+        }
+        input{
+            background-color: rgb(168, 168, 224);
+            border: none;
+            height: 1.5em;
+            width: 15em;
+            
+            margin-left: 2em;
+        }
+        /* p{  font-size: .9em;
+            
+        } */
+        canvas{
+            background-color: wheat;
+            height: 300px;
+            width:300px;
+        }
+        li{ 
+            font-size: 1em;
+            list-style: none;
+            padding: 2em;
+        }
+       .wynik-el{
+           padding: 0;
+           margin-top: 1em;
+            margin-left: 5em;
+            font-size: 2em;
+           
+       }
+       canvas{
+           background-color: rgb(219, 231, 246);
+       }
+       
+    </style>
+</head>
+<body> 
+    
+    <div class="left-side">
+        <div class="radio">
+            <div class="logo">
+                <h2>Body Mass Index Calculator</h2>
+            </div>  
+            <div class="form-group">
+            <ul class="ul-radio">
+                <li>  
+                    <label for="male-radio-el">Adult</label>
+                    <input type="radio" id="male-radio-el" value="0" name="typ" class="radio-point">
+                </li>
+              
+                <li> 
+                    <label for="child-radio-el" >Kids</label>
+                    <input type="radio" id="child-radio-el" value="1" name="typ" class="radio-point">
+                </li>
+            </ul>
+        </div> 
+        </div>
+
+        <div class="container-el">
+        <ul>
+            <li>
+                <label for="input">Add your height in meters</label>
+                <input id="wzrost" class="wzrost-el" type="text" placeholder="add height...">
+            </li>
+                <li><label  for="input">Add weight in kg</label>
+                <input id="waga" class="waga" type="text" placeholder="add weight ...">
+            </li>
+            <li>
+                 <button id="enter-el" class="enter">Enter</button>
+                 <button id="oblicz-el" class="oblicz">Proceed</button>
+            
+            </li>
+
+            <li class="wynik-el"> <p id="wynik-el">Result BMI: 0</p></li>
+        </ul>
+        </div>  
+    </div>
+    <div class="right-side">
+        <div class="info">
+            <h3>About</h3>
+            <p id="text-el">Body Mass Index - wskaźnik masy ciała jest wskaźnikiem, który jest obliczany przez porównanie wzrostu z masy ciała. Jego wartość jest pomocna w ocenie ryzyka wystąpienia chorób związanych z nadwagą takich jak miażdżyca lub choroba niedokrwienna serca.</p>
+        </div>
+        <div class="xyscale-el">
+            <canvas id="canvas" height="300" width="300"></canvas>
+            <button id="reset-btn">Reset</button> 
+        </div>
+    </div>
+
+    
+    <script>
+        const resetBtn = document.getElementById('reset-btn')
+        const wzrostEl = document.getElementById('wzrost');
+        const wagaEl = document.getElementById('waga');
+        const enterEl = document.getElementById('enter-el');
+        const obliczEl = document.getElementById('oblicz-el');
+        const wynikBmi = document.getElementById('wynik-el');
+        
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const textEl = document.getElementById('text-el');
+        
+        const wzrostArr = [];
+        const wagaArr = [];
+
+        const pointerX = 6;
+        const pointerY = 6;
+        
+        const radioEl = document.getElementsByName('typ')
+        
+
+
+        resetBtn.addEventListener("click", function(){
+            //alert("resetuj wciśnij ok");
+            window.location.reload();
+
+        })
+        
+       
+        function chartPoint(wagaB,wzrostB){
+            let pointX = Math.sqrt(wzrostB);
+
+            ctx.fillStyle = "red";
+            ctx.fillRect(pointX *100 + 50 , 250 - wagaB , pointerX, pointerY);
+            
+            ctx.fillStyle = "red";
+            ctx.fillRect(50,250-wagaB+3,pointX *100,1)
+
+            ctx.fillStyle ="red";
+            ctx.fillRect(pointX * 100 + 53,250,1,-wagaB)
+
+            
+            
+        }
+       
+        
+
+        function chartXy(){
+            ctx.fillStyle = "black";
+            ctx.fillRect(50,250,200,1);
+
+            ctx.fillStyle = "black";
+            ctx.fillRect(50,50,1,200);
+        }
+        chartXy()
+        
+        function radioInp(){
+
+        }
+
+        enterEl.addEventListener("click",function(){
+             let wzrostBmi = Math.pow(wzrostEl.value,2) ;
+             wzrostArr.push(wzrostBmi);
+             wzrostEl.value = "";
+            
+             //wagaArr.push();
+             let wagaB = Number.parseFloat(wagaEl.value);
+             wagaArr.push(wagaB)
+             console.log( wzrostArr);
+             wagaEl.value = "";
+             console.log( wagaArr);
+            
+             
+        })
+
+        obliczEl.addEventListener('click', function(){
+               let wzrostB = wzrostArr.pop(wzrostArr);
+               let wagaB = wagaArr.pop(wzrostArr);
+               let wynikB = wagaB / wzrostB;
+               wynikBmi.textContent = "Result BMI :" +""+ Math.round(wynikB)
+               console.log(wynikB)
+               infoParagraph(wynikB);
+               chartPoint(wagaB,wzrostB)
+               
+            //    resetFunc();
+        }) 
+        
+        
+        
+        function infoParagraph(wynikB){
+            if(wynikB < 16 ){
+            answer = "mniej niż 16 punktów to wygłodzenie"
+        }else if(wynikB >= 16 && wynikB < 17){
+            answer = "16 do 17 punktów wychudzenie"
+        }else if(wynikB >= 17 && wynikB < 19){
+            answer = "17 do 19 pukta niedowaga"
+        }else if(wynikB >= 19 && wynikB < 25){
+            answer = "wartość prawidłowa"
+        }else if(wynikB >= 25 && wynikB < 30){
+            answer = "uwaga!!!nadwaga"
+        }else if(wynikB >= 30 && wynikB < 35 ){
+            answer = "I stopień otyłości"
+        }else if(wynikB >= 35 && wynikB < 40){
+            answer = "II stopień otyłości"
+        }else if(wynikB > 40){
+            answer = "powyżej 40 punktów otyłość skrajna"
+        }else{
+            answer = "err"
+        }
+            
+            textEl.textContent = answer;
+           
+        }
+        
+        // w oparciu o https://www.bmi-kalkulator.pl/wzor
+    </script>
+</body>
+
+</html>
